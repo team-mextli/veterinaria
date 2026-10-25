@@ -4,7 +4,7 @@ Rol: DBA
 
 Responsabilidad inicial: Administrar la futura base de datos del Sistema Veterinario.
 
-Rama: docs/dba-test
+Rama: dba
 
 Estado: Prueba realizada correctamente.
 
