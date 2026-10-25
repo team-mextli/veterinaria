@@ -41,6 +41,15 @@ La base de datos está normalizada hasta Tercera Forma Normal y consta de ocho t
 
 ---
 
+## Documentación técnica
+
+| Documento                                           | Contenido                                                                                              |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md)                | **Guía de contribución** — desarrollo local, convención de commits, ramas y pull requests.             |
+| [`repository-config.md`](docs/repository-config.md) | **Ajustes del repositorio** — configuración de GitHub: Actions, ruleset de `main` y ajustes generales. |
+
+---
+
 ## Stack técnico
 
 - **Plataforma:** ASP.NET Core MVC (C#)
