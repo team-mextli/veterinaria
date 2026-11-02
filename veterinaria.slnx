@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="../../../../../../../../Development/veterinaria/Veterinaria.Datos/Veterinaria.Datos.csproj" Id="44c7fe75-8568-48bf-9c26-4db8896a3d1f" />
+  <Project Path="../../../../../../../../Development/veterinaria/Veterinaria.Entidades/Veterinaria.Entidades.csproj" Id="908c5df9-9ff1-43e3-9206-ceb76a0518f9" />
+  <Project Path="../../../../../../../../Development/veterinaria/Veterinaria.Negocios/Veterinaria.Negocios.csproj" Id="9550e189-31ba-4598-9a51-a810114444fc" />
+  <Project Path="../../../../../../../../Development/veterinaria/Veterinaria.Web/Veterinaria.Web.csproj" Id="b4bcaaeb-06db-4e3d-90b8-275ca4818e7c" />
+</Solution>
