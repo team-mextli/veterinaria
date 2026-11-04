@@ -1,7 +1,17 @@
+using Veterinaria.Negocios;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+string? cadena =
+    builder.Configuration.GetConnectionString("Veterinaria");
+
+if (!string.IsNullOrWhiteSpace(cadena))
+{
+    ConfiguracionNegocio.Inicializar(cadena);
+}
 
 var app = builder.Build();
 
