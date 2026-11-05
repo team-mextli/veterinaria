@@ -1,0 +1,52 @@
+@page "{id:int}"
+@model Veterinaria.Web.Pages.Clientes.DetalleModel
+@{
+    ViewData["Title"] = "Detalle del Cliente";
+}
+
+<div class="page-header">
+    <h1><i class="ti ti-user-circle"></i>Detalle del Cliente</h1>
+</div>
+
+<div class="soft-card">
+    <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="avatar lg av-0">
+            @Model.Cliente.Nombre[..1]@Model.Cliente.ApellidoPaterno[..1]
+        </div>
+        <div>
+            <div class="fs-4 fw-medium">
+                @Model.Cliente.Nombre @Model.Cliente.ApellidoPaterno @Model.Cliente.ApellidoMaterno
+            </div>
+            <span class="badge-soft coral"><i class="ti ti-user"></i> Propietario</span>
+        </div>
+    </div>
+
+    <ul class="info-list">
+        <li>
+            <i class="ti ti-phone"></i>
+            <div><small>Teléfono</small>@Model.Cliente.Telefono</div>
+        </li>
+        <li>
+            <i class="ti ti-mail"></i>
+            <div><small>Correo</small>@Model.Cliente.Correo</div>
+        </li>
+        <li>
+            <i class="ti ti-map-pin"></i>
+            <div><small>Dirección</small>@Model.Cliente.Direccion</div>
+        </li>
+    </ul>
+
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-page="/Mascotas/Index" asp-route-idCliente="@Model.Cliente.IdCliente"
+           class="btn btn-success">
+            <i class="ti ti-paw"></i> Ver Mascotas
+        </a>
+        <a asp-page="./Editar" asp-route-id="@Model.Cliente.IdCliente"
+           class="btn btn-primary">
+            <i class="ti ti-pencil"></i> Editar
+        </a>
+        <a asp-page="./Index" class="btn btn-secondary">
+            <i class="ti ti-arrow-left"></i> Regresar
+        </a>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+@page
+@model Veterinaria.Web.Pages.Clientes.IndexModel
+@{
+    ViewData["Title"] = "Clientes";
+}
+
+@if (TempData["Mensaje"] is string mensaje)
+{
+    <div class="soft-alert ok">
+        <i class="ti ti-circle-check me-1"></i>@mensaje
+    </div>
+}
+
+<div class="page-header">
+    <div>
+        <h1><i class="ti ti-users"></i>Clientes</h1>
+        <p class="page-sub">Propietarios registrados.</p>
+    </div>
+
+    <a asp-page="./Nuevo" class="btn btn-primary">
+        <i class="ti ti-plus"></i> Nuevo cliente
+    </a>
+</div>
+
+<form method="get" class="d-flex flex-wrap gap-2 mb-3">
+    <div class="search-pill flex-grow-1">
+        <i class="ti ti-search"></i>
+        <input asp-for="Buscar"
+               class="form-control"
+               placeholder="Buscar por nombre, teléfono o correo" />
+    </div>
+    <button type="submit" class="btn btn-outline-primary">Buscar</button>
+    <a asp-page="./Index" class="btn btn-outline-secondary">Limpiar</a>
+</form>
+
+@if (!Model.Clientes.Any())
+{
+    <div class="soft-alert warn">
+        <i class="ti ti-mood-empty me-1"></i>
+        No encontramos clientes con esa búsqueda.
+    </div>
+}
+
+@for (int i = 0; i < Model.Clientes.Count; i++)
+{
+    var cliente = Model.Clientes[i];
+
+    <div class="row-card">
+        <div class="avatar av-@(i % 3)">
+            @cliente.Nombre[..1]@cliente.ApellidoPaterno[..1]
+        </div>
+
+        <div class="row-main">
+            <div class="row-name">
+                @cliente.Nombre @cliente.ApellidoPaterno @cliente.ApellidoMaterno
+            </div>
+            <div class="row-meta">
+                <span><i class="ti ti-phone"></i>@cliente.Telefono</span>
+                <span><i class="ti ti-mail"></i>@cliente.Correo</span>
+            </div>
+        </div>
+
+        <div class="row-actions">
+            <a asp-page="./Detalle" asp-route-id="@cliente.IdCliente"
+               class="btn btn-sm btn-outline-primary">
+                <i class="ti ti-eye"></i> Ver
+            </a>
+            <a asp-page="./Editar" asp-route-id="@cliente.IdCliente"
+               class="btn btn-sm btn-outline-secondary">
+                <i class="ti ti-pencil"></i> Editar
+            </a>
+            <a asp-page="/Mascotas/Index" asp-route-idCliente="@cliente.IdCliente"
+               class="btn btn-sm btn-outline-success">
+                <i class="ti ti-paw"></i> Mascotas
+            </a>
+        </div>
+    </div>
+}
