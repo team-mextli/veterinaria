@@ -1,52 +1,83 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+@{
+    var pagina = ViewContext.RouteData.Values["page"]?.ToString() ?? "";
+    string Activo(string prefijo) => pagina.StartsWith(prefijo) ? "active" : "";
+}
+<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Veterinaria.Web</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - Centro Veterinario Karely Ruiz</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Veterinaria.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Veterinaria.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <div class="app">
+
+        <header class="topbar d-lg-none">
+            <button class="btn" type="button"
+                    data-bs-toggle="offcanvas" data-bs-target="#menuLateral"
+                    aria-controls="menuLateral" aria-label="Abrir menú">
+                <i class="ti ti-menu-2"></i>
+            </button>
+            <span class="fw-medium">Karely Ruiz</span>
+        </header>
+
+        <aside class="offcanvas-lg offcanvas-start sidebar-shell"
+               tabindex="-1" id="menuLateral">
+            <div class="sidebar">
+                <div class="logo">
+                    <div class="logo-circle"><i class="ti ti-paw"></i></div>
+                    <div>
+                        <div class="logo-title">Karely Ruiz</div>
+                        <div class="logo-sub">Centro Veterinario</div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white ms-auto d-lg-none"
+                            data-bs-dismiss="offcanvas" data-bs-target="#menuLateral"
+                            aria-label="Cerrar"></button>
+                </div>
+
+                <nav>
+                    <a class="side-link @(pagina == "/Index" ? "active" : "")" asp-page="/Index">
+                        <i class="ti ti-home"></i> Inicio
+                    </a>
+
+                    <div class="side-section">Gestión</div>
+                    <a class="side-link @Activo("/Clientes")" asp-page="/Clientes/Index">
+                        <i class="ti ti-users"></i> Clientes
+                    </a>
+                    <a class="side-link @Activo("/Mascotas")" asp-page="/Mascotas/Index">
+                        <i class="ti ti-paw"></i> Mascotas
+                    </a>
+
+                    <div class="side-section">Próximamente</div>
+                    <a class="side-link @Activo("/Veterinarios")" asp-page="/Veterinarios/Index">
+                        <i class="ti ti-stethoscope"></i> Veterinarios
+                    </a>
+                    <a class="side-link @Activo("/Consultas")" asp-page="/Consultas/Index">
+                        <i class="ti ti-clipboard-text"></i> Consultas
+                    </a>
+                    <a class="side-link @Activo("/Recetas")" asp-page="/Recetas/Index">
+                        <i class="ti ti-pill"></i> Recetas
+                    </a>
+                </nav>
+
+                <div class="side-note">
+                    Las mascotas son nuestra familia.
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+        </aside>
+
+        <main class="content">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Veterinaria.Web - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
