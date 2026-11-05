@@ -1,10 +1,57 @@
-﻿@page
+@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="hero">
+    <div class="blob1"></div>
+    <div class="blob2"></div>
+    <i class="ti ti-paw paw"></i>
+    <h2>¡Hola de nuevo!</h2>
+    <p>Aquí tienes el resumen del Centro Veterinario Karely Ruiz.</p>
+    <a asp-page="/Mascotas/Index" class="btn btn-primary">
+        Ver mascotas <i class="ti ti-arrow-right"></i>
+    </a>
+</div>
+
+@* Valores de ejemplo. *@
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="stat">
+            <i class="ti ti-users"></i>
+            <span class="num">2</span>
+            <span class="lbl">Clientes</span>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat teal">
+            <i class="ti ti-paw"></i>
+            <span class="num">3</span>
+            <span class="lbl">Mascotas</span>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat">
+            <i class="ti ti-dog"></i>
+            <span class="num">2</span>
+            <span class="lbl">Perros</span>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat teal">
+            <i class="ti ti-cat"></i>
+            <span class="num">1</span>
+            <span class="lbl">Gatos</span>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex flex-wrap gap-2">
+    <a asp-page="/Clientes/Nuevo" class="btn btn-outline-primary">
+        <i class="ti ti-user-plus"></i> Registrar cliente
+    </a>
+    <a asp-page="/Mascotas/Nueva" class="btn btn-outline-primary">
+        <i class="ti ti-plus"></i> Registrar mascota
+    </a>
 </div>
