@@ -33,6 +33,12 @@ else if (builder.Environment.IsDevelopment())
         "MYSQL AVISO: no se encontró ConnectionStrings:Veterinaria. " +
         "Configure User Secrets antes de probar la conexión.");
 }
+else 
+{
+    System.Diagnostics.Debug.WriteLine(
+        "No se encontró ConnectionStrings:Veterinaria. " +
+        "Revise User Secrets.");
+}
 
 var app = builder.Build();
 
