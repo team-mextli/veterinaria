@@ -1,0 +1,94 @@
+@page "{id:int}"
+@model Veterinaria.Web.Pages.Mascotas.EditarModel
+@{
+    ViewData["Title"] = "Editar Mascota";
+}
+
+<div class="page-header">
+    <h1><i class="ti ti-pencil"></i>Editar Mascota</h1>
+</div>
+
+<div class="soft-card">
+    <form method="post" class="row g-3">
+        <input type="hidden" asp-for="Mascota.IdMascota" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger"></div>
+
+                <div class="col-md-6">
+                    <label asp-for="Mascota.IdCliente"
+                           class="form-label">Propietario</label>
+
+                    <select asp-for="Mascota.IdCliente"
+                            asp-items="Model.Clientes"
+                            class="form-select">
+                        <option value="0">Seleccione un cliente</option>
+                    </select>
+
+                    <span asp-validation-for="Mascota.IdCliente"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Mascota.Nombre" class="form-label"></label>
+                    <input asp-for="Mascota.Nombre" class="form-control" />
+                    <span asp-validation-for="Mascota.Nombre"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Mascota.Especie" class="form-label"></label>
+                    <input asp-for="Mascota.Especie" class="form-control" />
+                    <span asp-validation-for="Mascota.Especie"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Mascota.Raza" class="form-label"></label>
+                    <input asp-for="Mascota.Raza" class="form-control" />
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Mascota.Sexo" class="form-label"></label>
+                    <select asp-for="Mascota.Sexo" class="form-select">
+                        <option value="">Seleccione</option>
+                        <option value="Macho">Macho</option>
+                        <option value="Hembra">Hembra</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Mascota.FechaNacimiento"
+                           class="form-label">Fecha de nacimiento</label>
+                    <input asp-for="Mascota.FechaNacimiento"
+                           type="date"
+                           class="form-control" />
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Mascota.Color" class="form-label"></label>
+                    <input asp-for="Mascota.Color" class="form-control" />
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="Mascota.SenasParticulares"
+                           class="form-label">Señas particulares</label>
+                    <textarea asp-for="Mascota.SenasParticulares"
+                              class="form-control"
+                              rows="3"></textarea>
+                </div>
+
+        <div class="col-12 d-flex flex-wrap gap-2">
+            <button type="submit" class="btn btn-primary">
+                <i class="ti ti-check"></i> Guardar cambios
+            </button>
+            <a asp-page="./Index" class="btn btn-secondary">
+                <i class="ti ti-x"></i> Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
