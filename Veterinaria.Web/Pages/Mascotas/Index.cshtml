@@ -76,6 +76,10 @@
            class="btn btn-sm btn-outline-secondary">
             <i class="ti ti-pencil"></i> Editar
         </a>
+            <a asp-page="./Eliminar" asp-route-id="@item.Mascota.IdMascota"
+               class="btn btn-sm btn-outline-danger">
+                <i class="ti ti-trash"></i> Eliminar
+            </a>
     </div>
 }
 </div>
