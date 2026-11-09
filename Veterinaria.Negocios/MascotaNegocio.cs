@@ -49,5 +49,33 @@ public class MascotaNegocio
         if (string.IsNullOrWhiteSpace(mascota.Especie))
             throw new ArgumentException(
                 "La especie es obligatoria.");
+
+        if (mascota.FechaNacimiento.HasValue && mascota.FechaNacimiento.Value.Date > DateTime.Today)
+        {
+            throw new ArgumentException(
+                "La fecha de nacimiento no puede ser futura.");
+        }
+    }
+
+    public bool Eliminar(int idMascota)
+    {
+        if (idMascota <= 0)
+            throw new ArgumentException(
+                "Mascota no válida.");
+
+        Mascota? mascota =
+            _datos.BuscarPorId(idMascota);
+
+        if (mascota is null)
+            return false;
+
+        if (_datos.TieneConsultas(idMascota))
+        {
+            throw new ReglaNegocioException(
+                "No se puede eliminar la mascota " +
+                "porque tiene consultas registradas.");
+        }
+
+        return _datos.Eliminar(idMascota);
     }
 }
