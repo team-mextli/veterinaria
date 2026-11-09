@@ -1,57 +1,82 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Veterinaria.Entidades;
+using Veterinaria.Negocios;
 
 namespace Veterinaria.Web.Pages.Clientes;
 
 public class EditarModel : PageModel
 {
-    [BindProperty]
-    public Cliente Cliente { get; set; } = new();
+	[BindProperty]
+	public Cliente Cliente { get; set; } = new();
 
-    public IActionResult OnGet(int id)
-    {
-        // Datos temporales para comprobar la interfaz.
-        Cliente = id switch
-        {
-            1 => new Cliente
-            {
-                IdCliente = 1,
-                Nombre = "Ana",
-                ApellidoPaterno = "López",
-                ApellidoMaterno = "García",
-                Telefono = "6461234567",
-                Correo = "ana@correo.com",
-                Direccion = "Ensenada"
-            },
-            2 => new Cliente
-            {
-                IdCliente = 2,
-                Nombre = "Carlos",
-                ApellidoPaterno = "Ramírez",
-                ApellidoMaterno = "Torres",
-                Telefono = "6467654321",
-                Correo = "carlos@correo.com",
-                Direccion = "Ensenada"
-            },
-            _ => new Cliente()
-        };
+	public string? Error { get; private set; }
 
-        if (Cliente.IdCliente == 0)
-            return NotFound();
+	public IActionResult OnGet(int id)
+	{
+		try
+		{
+			ClienteNegocio negocio = new();
 
-        return Page();
-    }
+			Cliente? cliente =
+				negocio.BuscarPorId(id);
 
-    public IActionResult OnPost()
-    {
-        if (!ModelState.IsValid)
-            return Page();
+			if (cliente is null)
+				return NotFound();
 
-        // PRÁCTICA 6:
-        // new ClienteNegocio().Modificar(Cliente);
+			Cliente = cliente;
 
-        TempData["Mensaje"] = "Cambios validados correctamente.";
-        return RedirectToPage("./Index");
-    }
+			return Page();
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine(ex);
+
+			Error =
+				"No fue posible consultar el cliente. " +
+				"Verifique la conexión con MySQL.";
+
+			return Page();
+		}
+	}
+
+	public IActionResult OnPost()
+	{
+		if (!ModelState.IsValid)
+			return Page();
+
+		try
+		{
+			ClienteNegocio negocio = new();
+
+			bool modificado =
+				negocio.Modificar(Cliente);
+
+			if (!modificado)
+				return NotFound();
+
+			TempData["Mensaje"] =
+				"Cliente modificado correctamente.";
+
+			return RedirectToPage("./Index");
+		}
+		catch (ArgumentException ex)
+		{
+			ModelState.AddModelError(
+				string.Empty,
+				ex.Message);
+
+			return Page();
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine(ex);
+
+			ModelState.AddModelError(
+				string.Empty,
+				"No fue posible modificar el cliente.");
+
+			return Page();
+		}
+	}
 }
