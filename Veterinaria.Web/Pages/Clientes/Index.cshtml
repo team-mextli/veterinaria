@@ -22,6 +22,13 @@
     </a>
 </div>
 
+@if (!string.IsNullOrWhiteSpace(Model.Error))
+{
+    <div class="soft-alert warn">
+        <i class="ti ti-alert-triangle me-1"></i>@Model.Error
+    </div>
+}
+
 <form method="get" class="d-flex flex-wrap gap-2 mb-3">
     <div class="search-pill flex-grow-1">
         <i class="ti ti-search"></i>
@@ -33,7 +40,7 @@
     <a asp-page="./Index" class="btn btn-outline-secondary">Limpiar</a>
 </form>
 
-@if (!Model.Clientes.Any())
+@if (string.IsNullOrWhiteSpace(Model.Error) && !Model.Clientes.Any())
 {
     <div class="soft-alert warn">
         <i class="ti ti-mood-empty me-1"></i>
@@ -72,6 +79,10 @@
             <a asp-page="/Mascotas/Index" asp-route-idCliente="@cliente.IdCliente"
                class="btn btn-sm btn-outline-success">
                 <i class="ti ti-paw"></i> Mascotas
+            </a>
+            <a asp-page="./Eliminar" asp-route-id="@cliente.IdCliente"
+               class="btn btn-sm btn-outline-danger">
+                <i class="ti ti-trash"></i> Eliminar
             </a>
         </div>
     </div>
