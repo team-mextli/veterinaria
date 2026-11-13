@@ -39,18 +39,6 @@ else
         "No se encontró ConnectionStrings:Veterinaria. " +
         "Revise User Secrets.");
 }
-else 
-{
-    System.Diagnostics.Debug.WriteLine(
-        "No se encontró ConnectionStrings:Veterinaria. " +
-        "Revise User Secrets.");
-}
-else 
-{
-    System.Diagnostics.Debug.WriteLine(
-        "No se encontró ConnectionStrings:Veterinaria. " +
-        "Revise User Secrets.");
-}
 
 var app = builder.Build();
 
