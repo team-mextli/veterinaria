@@ -2,43 +2,110 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Veterinaria.Entidades;
+using Veterinaria.Negocios;
 
 namespace Veterinaria.Web.Pages.Mascotas;
 
 public class NuevaModel : PageModel
 {
-    [BindProperty]
-    public Mascota Mascota { get; set; } = new();
+	[BindProperty]
+	public Mascota Mascota { get; set; } = new();
 
-    public List<SelectListItem> Clientes { get; private set; } = new();
+	public List<SelectListItem> Clientes { get; private set; } = new();
 
-    public void OnGet()
-    {
-        CargarClientes();
-    }
+	public bool HayClientes => Clientes.Count > 0;
 
-    public IActionResult OnPost()
-    {
-        CargarClientes();
+	public string? Error { get; private set; }
 
-        if (!ModelState.IsValid)
-            return Page();
+	public void OnGet()
+	{
+		try
+		{
+			CargarClientes();
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine(ex);
 
-        // PRÁCTICA 6:
-        // new MascotaNegocio().Agregar(Mascota);
+			Error =
+				"No fue posible cargar los clientes. " +
+				"Verifique la conexión con MySQL.";
+		}
+	}
 
-        TempData["Mensaje"] =
-            "Formulario de mascota validado correctamente.";
+	public IActionResult OnPost()
+	{
+		try
+		{
+			CargarClientes();
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine(ex);
 
-        return RedirectToPage("./Index");
-    }
+			ModelState.AddModelError(
+				string.Empty,
+				"No fue posible cargar los clientes.");
 
-    private void CargarClientes()
-    {
-        Clientes = new List<SelectListItem>
-        {
-            new("Ana López", "1"),
-            new("Carlos Ramírez", "2")
-        };
-    }
+			return Page();
+		}
+
+		if (!HayClientes)
+		{
+			ModelState.AddModelError(
+				string.Empty,
+				"No existen clientes registrados. " +
+				"Primero registre un cliente.");
+
+			return Page();
+		}
+
+		if (!ModelState.IsValid)
+			return Page();
+
+		try
+		{
+			MascotaNegocio negocio = new();
+
+			int id = negocio.Agregar(Mascota);
+
+			TempData["Mensaje"] =
+				$"Mascota registrada correctamente. ID: {id}";
+
+			return RedirectToPage("./Index");
+		}
+		catch (ArgumentException ex)
+		{
+			ModelState.AddModelError(
+				string.Empty,
+				ex.Message);
+
+			return Page();
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine(ex);
+
+			ModelState.AddModelError(
+				string.Empty,
+				"No fue posible registrar la mascota.");
+
+			return Page();
+		}
+	}
+
+	private void CargarClientes()
+	{
+		ClienteNegocio negocio = new();
+
+		Clientes = negocio
+			.Listar()
+			.Select(c => new SelectListItem
+			{
+				Value = c.IdCliente.ToString(),
+				Text =
+					$"{c.Nombre} {c.ApellidoPaterno} {c.ApellidoMaterno}".Trim()
+			})
+			.ToList();
+	}
 }

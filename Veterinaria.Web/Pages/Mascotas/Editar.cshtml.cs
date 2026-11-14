@@ -2,81 +2,109 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Veterinaria.Entidades;
+using Veterinaria.Negocios;
 
 namespace Veterinaria.Web.Pages.Mascotas;
 
 public class EditarModel : PageModel
 {
-    [BindProperty]
-    public Mascota Mascota { get; set; } = new();
+	[BindProperty]
+	public Mascota Mascota { get; set; } = new();
 
-    public List<SelectListItem> Clientes { get; private set; } = new();
+	public List<SelectListItem> Clientes { get; private set; } = new();
 
-    public IActionResult OnGet(int id)
-    {
-        CargarClientes();
+	public string? Error { get; private set; }
 
-        Mascota = id switch
-        {
-            1 => new Mascota
-            {
-                IdMascota = 1,
-                IdCliente = 1,
-                Nombre = "Max",
-                Especie = "Perro",
-                Raza = "Labrador",
-                Sexo = "Macho",
-                FechaNacimiento = new DateTime(2021, 4, 15),
-                Color = "Dorado"
-            },
-            2 => new Mascota
-            {
-                IdMascota = 2,
-                IdCliente = 1,
-                Nombre = "Luna",
-                Especie = "Gato",
-                Raza = "Siamés",
-                Sexo = "Hembra",
-                FechaNacimiento = new DateTime(2022, 8, 10),
-                Color = "Crema"
-            },
-            3 => new Mascota
-            {
-                IdMascota = 3,
-                IdCliente = 2,
-                Nombre = "Rocky",
-                Especie = "Perro",
-                Raza = "Pastor Alemán",
-                Sexo = "Macho",
-                FechaNacimiento = new DateTime(2020, 6, 20),
-                Color = "Negro y café"
-            },
-            _ => new Mascota()
-        };
+	public IActionResult OnGet(int id)
+	{
+		try
+		{
+			CargarClientes();
 
-        return Mascota.IdMascota == 0 ? NotFound() : Page();
-    }
+			MascotaNegocio negocio = new();
 
-    public IActionResult OnPost()
-    {
-        CargarClientes();
+			Mascota? mascota = negocio.BuscarPorId(id);
 
-        if (!ModelState.IsValid)
-            return Page();
+			if (mascota is null)
+				return NotFound();
 
-        // PRÁCTICA 6:
-        // new MascotaNegocio().Modificar(Mascota);
+			Mascota = mascota;
 
-        TempData["Mensaje"] = "Cambios de mascota validados.";
-        return RedirectToPage("./Index");
-    }
+			return Page();
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine(ex);
 
-    private void CargarClientes()
-    {
-        Clientes = new List<SelectListItem>
-        {
-            new("Ana López", "1"),
-            new("Carlos Ramírez", "2")
-        };
-    }
+			Error = "No fue posible consultar la mascota.";
+
+			return Page();
+		}
+	}
+
+	public IActionResult OnPost()
+	{
+		try
+		{
+			CargarClientes();
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine(ex);
+
+			ModelState.AddModelError(
+				string.Empty,
+				"No fue posible cargar los clientes.");
+
+			return Page();
+		}
+
+		if (!ModelState.IsValid)
+			return Page();
+
+		try
+		{
+			MascotaNegocio negocio = new();
+
+			bool modificada = negocio.Modificar(Mascota);
+
+			if (!modificada)
+				return NotFound();
+
+			TempData["Mensaje"] = "Mascota modificada correctamente.";
+
+			return RedirectToPage("./Index");
+		}
+		catch (ArgumentException ex)
+		{
+			ModelState.AddModelError(string.Empty, ex.Message);
+
+			return Page();
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine(ex);
+
+			ModelState.AddModelError(
+				string.Empty,
+				"No fue posible modificar la mascota.");
+
+			return Page();
+		}
+	}
+
+	private void CargarClientes()
+	{
+		ClienteNegocio negocio = new();
+
+		Clientes = negocio
+			.Listar()
+			.Select(c => new SelectListItem
+			{
+				Value = c.IdCliente.ToString(),
+				Text =
+					$"{c.Nombre} {c.ApellidoPaterno} {c.ApellidoMaterno}".Trim()
+			})
+			.ToList();
+	}
 }

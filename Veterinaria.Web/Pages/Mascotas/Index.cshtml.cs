@@ -1,83 +1,76 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Veterinaria.Entidades;
+using Veterinaria.Negocios;
 
 namespace Veterinaria.Web.Pages.Mascotas;
 
 public class IndexModel : PageModel
 {
-    [BindProperty(SupportsGet = true)]
-    public int? IdCliente { get; set; }
+	[BindProperty(SupportsGet = true)]
+	public int? IdCliente { get; set; }
+	[BindProperty(SupportsGet = true)]
+	public string? Especie { get; set; }
+	public List<MascotaFila> Mascotas { get; private set; } = new();
 
-    [BindProperty(SupportsGet = true)]
-    public string? Especie { get; set; }
+	public string? Error { get; private set; }
 
-    public List<MascotaFila> Mascotas { get; private set; } = new();
+	public void OnGet()
+	{
+		try
+		{
+			MascotaNegocio mascotaNegocio = new();
+			ClienteNegocio clienteNegocio = new();
 
-    public void OnGet()
-    {
-        Mascotas = new List<MascotaFila>
-        {
-            new()
-            {
-                Mascota = new Mascota
-                {
-                    IdMascota = 1,
-                    IdCliente = 1,
-                    Nombre = "Max",
-                    Especie = "Perro",
-                    Raza = "Labrador",
-                    Sexo = "Macho"
-                },
-                Propietario = "Ana López"
-            },
-            new()
-            {
-                Mascota = new Mascota
-                {
-                    IdMascota = 2,
-                    IdCliente = 1,
-                    Nombre = "Luna",
-                    Especie = "Gato",
-                    Raza = "Siamés",
-                    Sexo = "Hembra"
-                },
-                Propietario = "Ana López"
-            },
-            new()
-            {
-                Mascota = new Mascota
-                {
-                    IdMascota = 3,
-                    IdCliente = 2,
-                    Nombre = "Rocky",
-                    Especie = "Perro",
-                    Raza = "Pastor Alemán",
-                    Sexo = "Macho"
-                },
-                Propietario = "Carlos Ramírez"
-            }
-        };
+			List<Mascota> mascotas =
+				IdCliente.HasValue
+					? mascotaNegocio.ListarPorCliente(IdCliente.Value)
+					: mascotaNegocio.Listar();
 
-        if (IdCliente.HasValue)
-        {
-            Mascotas = Mascotas
-                .Where(m => m.Mascota.IdCliente == IdCliente.Value)
-                .ToList();
-        }
+			if (!string.IsNullOrWhiteSpace(Especie))
+			{
+				mascotas = mascotas
+					.Where(m => string.Equals(
+						m.Especie,
+						Especie,
+						StringComparison.OrdinalIgnoreCase))
+					.ToList();
+			}
 
-        if (!string.IsNullOrWhiteSpace(Especie))
-        {
-            Mascotas = Mascotas
-                .Where(m => m.Mascota.Especie.Equals(
-                    Especie, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-        }
-    }
+			Dictionary<int, Cliente> clientes =
+				clienteNegocio
+					.Listar()
+					// IdCliente es PK; no existen duplicados.
+					.ToDictionary(c => c.IdCliente);
 
-    public class MascotaFila
-    {
-        public Mascota Mascota { get; set; } = new();
-        public string Propietario { get; set; } = string.Empty;
-    }
+			Mascotas = mascotas
+				.Select(m => new MascotaFila
+				{
+					Mascota = m,
+					Propietario =
+						clientes.TryGetValue(
+							m.IdCliente,
+							out Cliente? cliente)
+						? $"{cliente.Nombre} " +
+						  $"{cliente.ApellidoPaterno}"
+						: "No disponible"
+				})
+				.ToList();
+		}
+		catch (Exception ex)
+		{
+			System.Diagnostics.Debug.WriteLine(ex);
+
+			Error =
+				"No fue posible consultar las mascotas.";
+		}
+	}
+
+	public class MascotaFila
+	{
+		public Mascota Mascota { get; set; } = new();
+
+		public string Propietario { get; set; } =
+			string.Empty;
+	}
 }
