@@ -55,3 +55,17 @@ Orden recomendado:
 5. 04_verificacion_final_p7.sql
 
 Advertencia: 00_crear_bd.sql elimina y reconstruye la base local.
+
+## Respaldo final
+
+Archivo:
+`backups/respaldo_veterinaria_p7.sql`
+
+Estado:
+generado después de aprobar P7.
+
+Restauración:
+- si el dump incluye CREATE DATABASE, ejecutarlo directamente;
+- si no lo incluye, ejecutar antes `00_crear_bd.sql`.
+
+Verificación: 9 tablas, 9 PK y 8 FK confirmadas con `04_verificacion_final_p7.sql`.
