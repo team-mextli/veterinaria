@@ -38,6 +38,24 @@
             <i class="ti ti-tag"></i>
             <div><small>Raza</small>@Model.Mascota.Raza</div>
         </li>
+        <li>
+            <i class="ti ti-cake"></i>
+            <div>
+                <small>Fecha de nacimiento</small>
+                @(Model.Mascota.FechaNacimiento.HasValue
+                    ? Model.Mascota.FechaNacimiento.Value.ToString("dd/MM/yyyy")
+                    : "No registrada")
+            </div>
+        </li>
+        <li>
+            <i class="ti ti-palette"></i>
+            <div>
+                <small>Color</small>
+                @(string.IsNullOrWhiteSpace(Model.Mascota.Color)
+                    ? "No registrado"
+                    : Model.Mascota.Color)
+            </div>
+        </li>
     </ul>
 
     <div class="d-flex flex-wrap gap-2">

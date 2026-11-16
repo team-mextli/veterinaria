@@ -33,3 +33,25 @@ Orden recomendado para reconstruir la base:
 2. 01_datos_prueba.sql
 3. 02_pruebas.sql
 4. 03_verificacion_p6.sql — sólo para verificación
+
+## Práctica 7
+
+Archivo agregado:
+
+- 04_verificacion_final_p7.sql
+
+Finalidad:
+comprobar el estado final de la base
+durante las pruebas de aceptación,
+incluyendo las 9 tablas, sus PK, sus FK
+y las reglas de integridad referencial.
+
+Orden recomendado:
+
+1. 00_crear_bd.sql
+2. 01_datos_prueba.sql
+3. 02_pruebas.sql
+4. 03_verificacion_p6.sql
+5. 04_verificacion_final_p7.sql
+
+Advertencia: 00_crear_bd.sql elimina y reconstruye la base local.
