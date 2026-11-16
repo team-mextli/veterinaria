@@ -36,41 +36,44 @@ public class EliminarModel : PageModel
 		}
 	}
 
-	public IActionResult OnPost(int id)
-	{
-		ClienteNegocio negocio = new();
+    public IActionResult OnPost(int id)
+    {
+        try
+        {
+            ClienteNegocio negocio = new();
 
-		Cliente? cliente = negocio.BuscarPorId(id);
+            Cliente? cliente =
+                negocio.BuscarPorId(id);
 
-		if (cliente is null)
-			return NotFound();
+            if (cliente is null)
+                return NotFound();
 
-		Cliente = cliente;
+            Cliente = cliente;
 
-		try
-		{
-			bool eliminado = negocio.Eliminar(id);
+            bool eliminado =
+                negocio.Eliminar(id);
 
-			if (!eliminado)
-				return NotFound();
+            if (!eliminado)
+                return NotFound();
 
-			TempData["Mensaje"] = "Cliente eliminado correctamente.";
+            TempData["Mensaje"] =
+                "Cliente eliminado correctamente.";
 
-			return RedirectToPage("./Index");
-		}
-		catch (ReglaNegocioException ex)
-		{
-			Error = ex.Message;
+            return RedirectToPage("./Index");
+        }
+        catch (ReglaNegocioException ex)
+        {
+            Error = ex.Message;
+            return Page();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex);
 
-			return Page();
-		}
-		catch (Exception ex)
-		{
-			System.Diagnostics.Debug.WriteLine(ex);
+            Error =
+                "No fue posible eliminar el cliente.";
 
-			Error = "No fue posible eliminar el cliente.";
-
-			return Page();
-		}
-	}
+            return Page();
+        }
+    }
 }

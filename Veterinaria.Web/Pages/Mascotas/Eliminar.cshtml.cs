@@ -29,43 +29,46 @@ public class EliminarModel : PageModel
 		}
 	}
 
-	public IActionResult OnPost(int id)
-	{
-		IActionResult resultado = Cargar(id);
+    public IActionResult OnPost(int id)
+    {
+        try
+        {
+            IActionResult resultado =
+                Cargar(id);
 
-		if (resultado is NotFoundResult)
-			return resultado;
+            if (resultado is NotFoundResult)
+                return resultado;
 
-		try
-		{
-			MascotaNegocio negocio = new();
+            MascotaNegocio negocio = new();
 
-			bool eliminada = negocio.Eliminar(id);
+            bool eliminada =
+                negocio.Eliminar(id);
 
-			if (!eliminada)
-				return NotFound();
+            if (!eliminada)
+                return NotFound();
 
-			TempData["Mensaje"] = "Mascota eliminada correctamente.";
+            TempData["Mensaje"] =
+                "Mascota eliminada correctamente.";
 
-			return RedirectToPage("./Index");
-		}
-		catch (ReglaNegocioException ex)
-		{
-			Error = ex.Message;
+            return RedirectToPage("./Index");
+        }
+        catch (ReglaNegocioException ex)
+        {
+            Error = ex.Message;
+            return Page();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine(ex);
 
-			return Page();
-		}
-		catch (Exception ex)
-		{
-			System.Diagnostics.Debug.WriteLine(ex);
+            Error =
+                "No fue posible eliminar la mascota.";
 
-			Error = "No fue posible eliminar la mascota.";
+            return Page();
+        }
+    }
 
-			return Page();
-		}
-	}
-
-	private IActionResult Cargar(int id)
+    private IActionResult Cargar(int id)
 	{
 		MascotaNegocio mascotaNegocio = new();
 
